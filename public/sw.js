@@ -24,8 +24,8 @@ var STATIC_FILES = [
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
     '/manifest.json',
-    '/src/images/icons/app-icon-192x192.png',
-    '/src/images/icons/app-icon-512x512.png',
+    '/icons/app-icon-192x192.png',
+    '/icons/app-icon-512x512.png',
 ];
 
 self.addEventListener('install', function (event) {
