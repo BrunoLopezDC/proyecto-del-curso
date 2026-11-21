@@ -1,8 +1,8 @@
 importScripts('src/js/idb.js');
 importScripts('src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v18';
-var CACHE_DYNAMIC_NAME = 'dynamic-v18';
+var CACHE_STATIC_NAME = 'static-v19';
+var CACHE_DYNAMIC_NAME = 'dynamic-v19';
 var POSTS_URL = 'https://pqkwqymrxwfhbibsatkc.supabase.co/rest/v1/post';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxa3dxeW1yeHdmaGJpYnNhdGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MTE4NzAsImV4cCI6MjEwODM4Nzg3MH0.JsNyLPSwb5lk-1XnVraagUX7VkkCrtXGbOY-k897PaY';
 var pendingSyncPromise = null;
@@ -22,7 +22,10 @@ var STATIC_FILES = [
     'https://pqkwqymrxwfhbibsatkc.supabase.co/storage/v1/object/public/imagenes/sf-boat.jpg',
     'https://fonts.googleapis.com/css?family=Roboto:400,700',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
-    'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
+    'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
+    '/manifest.json',
+    '/src/images/icons/app-icon-192x192.png',
+    '/src/images/icons/app-icon-512x512.png',
 ];
 
 self.addEventListener('install', function (event) {
