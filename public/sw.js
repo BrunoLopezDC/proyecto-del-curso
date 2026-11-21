@@ -1,8 +1,8 @@
 importScripts('src/js/idb.js');
 importScripts('src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v19';
-var CACHE_DYNAMIC_NAME = 'dynamic-v19';
+var CACHE_STATIC_NAME = 'static-v20';
+var CACHE_DYNAMIC_NAME = 'dynamic-v20';
 var POSTS_URL = 'https://pqkwqymrxwfhbibsatkc.supabase.co/rest/v1/post';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxa3dxeW1yeHdmaGJpYnNhdGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MTE4NzAsImV4cCI6MjEwODM4Nzg3MH0.JsNyLPSwb5lk-1XnVraagUX7VkkCrtXGbOY-k897PaY';
 var pendingSyncPromise = null;
@@ -149,7 +149,33 @@ self.addEventListener('fetch', function (event) {
     ) {
         event.respondWith(fetch(event.request));
     } else if (isInArray(event.request.url, STATIC_FILES)) {
-        event.respondWith(caches.match(event.request));
+        event.respondWith(
+            caches.match(event.request)
+                .then(function (cachedResponse) {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+
+                    return fetch(event.request)
+                        .then(function (networkResponse) {
+                            if (!networkResponse.ok) {
+                                return networkResponse;
+                            }
+
+                            return caches.open(CACHE_STATIC_NAME)
+                                .then(function (cache) {
+                                    cache.put(event.request.url, networkResponse.clone());
+                                    return networkResponse;
+                                });
+                        })
+                        .catch(function () {
+                            if (event.request.headers.get('accept').includes('text/html')) {
+                                return caches.match('/offline.html');
+                            }
+                            return Response.error();
+                        });
+                })
+        );
     } else {
         event.respondWith(
             caches.match(event.request)
