@@ -1,8 +1,8 @@
 importScripts('src/js/idb.js');
 importScripts('src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v20';
-var CACHE_DYNAMIC_NAME = 'dynamic-v20';
+var CACHE_STATIC_NAME = 'static-v21';
+var CACHE_DYNAMIC_NAME = 'dynamic-v21';
 var POSTS_URL = 'https://pqkwqymrxwfhbibsatkc.supabase.co/rest/v1/post';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxa3dxeW1yeHdmaGJpYnNhdGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MTE4NzAsImV4cCI6MjEwODM4Nzg3MH0.JsNyLPSwb5lk-1XnVraagUX7VkkCrtXGbOY-k897PaY';
 var pendingSyncPromise = null;
@@ -29,6 +29,8 @@ var STATIC_FILES = [
 ];
 
 self.addEventListener('install', function (event) {
+    self.skipWaiting();
+
     console.log('[Serviceworker] Installing Service Worker', event);
 
     event.waitUntil(
