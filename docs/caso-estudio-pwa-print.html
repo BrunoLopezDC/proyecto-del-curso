@@ -76,7 +76,7 @@ figcaption { margin-top: 1.5mm; color: #58696f; font-size: 9pt; }
 <li>Aplicación publicada: <a href="https://proyecto-del-curso.vercel.app/">https://proyecto-del-curso.vercel.app/</a></li>
 <li>Repositorio: <a href="https://github.com/BrunoLopezDC/proyecto-del-curso">github.com/BrunoLopezDC/proyecto-del-curso</a></li>
 </ul>
-<div class="callout"><b>Estado de publicación:</b> La aplicación está publicada en Vercel y la URL responde HTTP 200. La copia de trabajo (<code>static-v23</code>) se probó y se capturó en entorno local (<code>localhost:8080</code>). Al 26 de noviembre de 2026 el alias publicado aún sirve <code>static-v21</code>, por lo que no refleja los cambios de esta versión.</div>
+<div class="callout"><b>Estado de publicación:</b> La aplicación está publicada en Vercel y responde HTTP 200. Verificado el 26 de noviembre de 2026, el alias sirve <code>static-v23</code>, igual a la copia entregada.</div>
 
 <h2>4. Pantallas y generación de vistas</h2>
 <ol>
@@ -99,7 +99,7 @@ figcaption { margin-top: 1.5mm; color: #58696f; font-size: 9pt; }
 <tr><td>Suite automatizada</td><td><b>4 aprobadas, 0 fallidas</b></td><td><code>npm test</code> con Node test runner.</td></tr>
 <tr><td>Renderizado y feed local</td><td>Aprobada</td><td>Comprobación de home, imagen local y publicaciones remotas en navegador.</td></tr>
 <tr><td>Flujo offline→online</td><td><b>Aprobada</b></td><td>Se creó una publicación con la red desactivada, se verificó el guardado local, se reconectó, se encontró en Supabase con HTTP 200 y se confirmó que la cola <code>sync-posts</code> quedó vacía. La fila de prueba se eliminó después.</td></tr>
-<tr><td>URL de Vercel</td><td>HTTP 200; versión publicada anterior</td><td>El alias publicado aún sirve <code>static-v21</code> y no refleja la copia local <code>static-v23</code>.</td></tr>
+<tr><td>URL de Vercel</td><td>Aprobada</td><td>El alias responde HTTP 200 y su service worker es <code>static-v23</code>, igual a la copia entregada.</td></tr>
 </tbody></table>
 <figure><img src="capturas/04-offline.png" alt="Feed en modo offline cargado desde IndexedDB"><figcaption>Figura 4. Feed local disponible sin conexión.</figcaption></figure>
 <figure><img src="capturas/05-cache.png" alt="Chrome Application Cache Storage con static-v23 y dynamic-v23"><figcaption>Figura 5. Cache Storage muestra las cachés <code>static-v23</code> y <code>dynamic-v23</code>.</figcaption></figure>
@@ -107,7 +107,6 @@ figcaption { margin-top: 1.5mm; color: #58696f; font-size: 9pt; }
 
 <h2>6. Limitaciones y siguientes pasos</h2>
 <ul>
-<li>Desplegar la versión <code>static-v23</code> en Vercel y verificar el alias de producción.</li>
 <li>Repetir la verificación de sincronización en otro navegador compatible con Background Sync para ampliar cobertura.</li>
 <li>Configurar y documentar políticas RLS; la clave anon no sustituye autorización.</li>
 <li>Para evolucionar el prototipo: añadir autenticación, edición, eliminación y carga de imágenes.</li>

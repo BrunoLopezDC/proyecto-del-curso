@@ -46,7 +46,7 @@ UTEQGram es una aplicación web progresiva para compartir momentos breves de la 
 - Ejecutar pruebas: `npm test`.
 - Publicación configurada: `https://proyecto-del-curso.vercel.app/`.
 - Repositorio de código fuente: `https://github.com/BrunoLopezDC/proyecto-del-curso`.
-- Estado de publicación: La aplicación está publicada en Vercel y la URL responde HTTP 200. La copia de trabajo (`static-v23`) se probó y se capturó en entorno local (`localhost:8080`). Al 26 de noviembre de 2026 el alias publicado aún sirve `static-v21`, por lo que no refleja los cambios de esta versión.
+- Estado de publicación: La aplicación está publicada en Vercel y responde HTTP 200. Verificado el 26 de noviembre de 2026, el alias sirve `static-v23`, igual a la copia entregada.
 
 ## 4. Vistas y generación
 
@@ -83,7 +83,7 @@ Fecha de ejecución: 2026-11-26, entorno local Linux con Node.js/npm y Chrome. L
 | Suite automatizada | **4 aprobadas, 0 fallidas** | `npm test` (`node --test`). |
 | Renderizado y feed en navegador local | Aprobada | Servidor `npm start`; se comprobó la home, la imagen local y publicaciones remotas existentes. |
 | Flujo offline→online | **Aprobada** | Se creó una publicación de prueba con la red desactivada, se verificó su guardado local, se reconectó, se encontró en Supabase con HTTP 200 y se confirmó que la cola `sync-posts` quedó vacía. La fila de prueba se eliminó después. |
-| URL de Vercel | HTTP 200; versión publicada anterior | El alias publicado aún sirve `static-v21` y no refleja la copia local `static-v23`. |
+| URL de Vercel | Aprobada | El alias responde HTTP 200 y su service worker es `static-v23`, igual a la copia entregada. |
 
 ![Feed en modo offline cargado desde IndexedDB](capturas/04-offline.png)
 
@@ -99,7 +99,6 @@ Fecha de ejecución: 2026-11-26, entorno local Linux con Node.js/npm y Chrome. L
 
 ## 6. Limitaciones y siguientes pasos
 
-- Desplegar la versión `static-v23` en Vercel y verificar el alias de producción.
 - Repetir la verificación de sincronización en otro navegador compatible con Background Sync para ampliar cobertura.
 - Configurar y documentar las políticas RLS de Supabase; una clave `anon` no reemplaza las reglas de autorización.
 - Añadir autenticación, edición/eliminación y selección/carga de imágenes si el caso evoluciona de demostración académica a servicio multiusuario.
