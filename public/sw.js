@@ -1,8 +1,8 @@
 importScripts('src/js/idb.js');
 importScripts('src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v21';
-var CACHE_DYNAMIC_NAME = 'dynamic-v21';
+var CACHE_STATIC_NAME = 'static-v23';
+var CACHE_DYNAMIC_NAME = 'dynamic-v23';
 var POSTS_URL = 'https://pqkwqymrxwfhbibsatkc.supabase.co/rest/v1/post';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxa3dxeW1yeHdmaGJpYnNhdGtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MTE4NzAsImV4cCI6MjEwODM4Nzg3MH0.JsNyLPSwb5lk-1XnVraagUX7VkkCrtXGbOY-k897PaY';
 var pendingSyncPromise = null;
@@ -16,10 +16,13 @@ var STATIC_FILES = [
     '/src/js/feed.js',
     '/src/js/idb.js',
     '/src/js/material.min.js',
+    '/src/js/utility.js',
     '/src/css/app.css',
     '/src/css/feed.css',
+    '/src/css/help.css',
     '/src/images/main-image.jpg',
-    'https://pqkwqymrxwfhbibsatkc.supabase.co/storage/v1/object/public/imagenes/sf-boat.jpg',
+    '/src/images/main-image-sm.jpg',
+    '/src/images/main-image-lg.jpg',
     'https://fonts.googleapis.com/css?family=Roboto:400,700',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
@@ -171,7 +174,8 @@ self.addEventListener('fetch', function (event) {
                                 });
                         })
                         .catch(function () {
-                            if (event.request.headers.get('accept').includes('text/html')) {
+                                        var accept = event.request.headers.get('accept') || '';
+                                        if (accept.includes('text/html')) {
                                 return caches.match('/offline.html');
                             }
                             return Response.error();

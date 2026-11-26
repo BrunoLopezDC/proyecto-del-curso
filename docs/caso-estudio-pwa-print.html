@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Caso de estudio PWA UTEQGram</title>
+<style>
+@page { size: A4; margin: 18mm 17mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #20313a; font: 10.5pt/1.48 Arial, Helvetica, sans-serif; }
+h1 { margin: 4mm 0 2mm; color: #0b4961; font-size: 25pt; line-height: 1.08; }
+h2 { margin: 9mm 0 3mm; padding-bottom: 2mm; border-bottom: 1px solid #b8cbd0; color: #0b4961; font-size: 16pt; break-after: avoid; }
+h3 { margin: 5mm 0 2mm; color: #a35325; font-size: 12pt; break-after: avoid; }
+p { margin: 2mm 0 3mm; }
+ul, ol { margin: 2mm 0 4mm; padding-left: 6mm; }
+li { margin: 1.3mm 0; }
+table { width: 100%; margin: 3mm 0 5mm; border-collapse: collapse; font-size: 8.6pt; }
+tr { break-inside: avoid; }
+th { background: #0b4961; color: white; text-align: left; }
+th, td { padding: 2.2mm; border: 1px solid #cbd6d6; vertical-align: top; }
+code { padding: .4mm 1mm; background: #eef2f1; font: 9pt monospace; overflow-wrap: anywhere; }
+a { color: #075985; }
+.cover { margin-bottom: 6mm; padding: 7mm 0 6mm; border-bottom: 4px solid #a35325; }
+.eyebrow { color: #a35325; font-size: 9pt; font-weight: bold; letter-spacing: 1px; }
+.callout { margin: 4mm 0; padding: 3mm 4mm; border-left: 3px solid #a35325; background: #f6f1ec; }
+.small { color: #58696f; font-size: 9pt; }
+figure { margin: 4mm 0 6mm; break-inside: avoid; }
+figure img { display: block; width: 100%; max-height: 105mm; object-fit: contain; }
+figcaption { margin-top: 1.5mm; color: #58696f; font-size: 9pt; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="eyebrow">CASO DE ESTUDIO · APLICACIÓN WEB PROGRESIVA</div>
+  <h1>UTEQGram<br>Comunidad del campus</h1>
+  <p>Informe técnico de plataformas, configuración, vistas, datos y validación.</p>
+  <p><b>Nombre:</b> Bruno Lopez de la Cruz<br><b>Institución:</b> UTEQ<br><b>Profesor:</b> José Alberto Delgadillo Gutierrez</p>
+  <p class="small">Fecha: 26 de noviembre de 2026 · Entorno: Linux, Node.js, npm y Chrome</p>
+</div>
+
+<h2>1. Resumen del caso</h2>
+<p>UTEQGram permite a integrantes de la comunidad universitaria compartir momentos breves del campus mediante un título y una ubicación. La aplicación consulta publicaciones compartidas, conserva una copia local y permite seguir consultando y creando publicaciones cuando no hay conexión.</p>
+<p>La interfaz se genera del lado del cliente con HTML, CSS y JavaScript. No hay renderizado de vistas en el servidor: Supabase entrega datos JSON y el navegador construye las tarjetas del feed.</p>
+
+<h2>2. Plataformas y herramientas</h2>
+<table><thead><tr><th>Herramienta</th><th>Uso y justificación</th></tr></thead><tbody>
+<tr><td>HTML, CSS y JavaScript</td><td>Interfaz adaptable, feed, formulario y navegación. Adecuados para una app ligera y estática sin compilación.</td></tr>
+<tr><td>Material Design Lite 1.3</td><td>Componentes de navegación, botones, campos y snackbar. Se conserva la base existente y se complementa con estilos propios para el contexto universitario.</td></tr>
+<tr><td>Service Worker y Cache API</td><td>Precarga el shell, atiende rutas y recursos desde caché y ofrece fallback offline. Permite volver a abrir la app tras la primera visita.</td></tr>
+<tr><td>IndexedDB</td><td>Almacena publicaciones y pendientes de sincronización de forma persistente en el navegador; habilita lectura y creación offline.</td></tr>
+<tr><td>Supabase REST/PostgREST</td><td>Fuente remota compartida para las publicaciones, sin implementar un backend propio en este prototipo.</td></tr>
+<tr><td>Background Sync</td><td>Solicita el envío diferido de pendientes en navegadores compatibles. Es una mejora progresiva: la persistencia local no depende de esta API.</td></tr>
+<tr><td>Node.js, npm y http-server</td><td>Servidor local y pruebas. Sirve <code>public/</code> por HTTP, requisito para las APIs de PWA.</td></tr>
+<tr><td>Vercel</td><td>Publicación estática asociada al repositorio y configurada en <code>vercel.json</code>.</td></tr>
+</tbody></table>
+
+<h2>3. Parámetros de configuración</h2>
+<h3>PWA y caché</h3>
+<ul>
+<li>Entrada <code>public/index.html</code>, idioma español, viewport adaptable y metadatos de instalación.</li>
+<li>Manifiesto <code>public/manifest.json</code>: <code>start_url: /</code>, <code>scope: /</code>, <code>display: standalone</code>, color de tema <code>#075985</code>, fondo <code>#f3f6f5</code>, iconos PNG de 192 y 512 px.</li>
+<li>Service Worker <code>public/sw.js</code>, registrado en <code>/sw.js</code> con alcance raíz.</li>
+<li>Cachés <code>static-v23</code> y <code>dynamic-v23</code>. La caché estática incluye home, ayuda, fallback, scripts, estilos, imágenes e iconos. Se incrementa la versión al cambiar el shell.</li>
+<li>El shell se sirve desde Cache API. Las publicaciones se consultan en Supabase y se conservan localmente para usarlas ante fallos de red.</li>
+</ul>
+<h3>Datos locales y remotos</h3>
+<ul>
+<li>IndexedDB: base <code>post-store</code>, versión 2; almacenes <code>posts</code> y <code>sync-posts</code>, clave <code>id</code>.</li>
+<li>Supabase: recurso REST <code>post</code>, lectura <code>?select=*</code> y escritura JSON con <code>Prefer: return=representation</code>.</li>
+<li>Campos: <code>id</code>, <code>title</code>, <code>location</code> e <code>image</code>. Las publicaciones nuevas usan <code>/src/images/main-image.jpg</code>.</li>
+<li>Offline: la publicación se guarda en ambos almacenes y se muestra desde IndexedDB. Se solicita Background Sync si está disponible.</li>
+<li>Se usa clave pública/anon de Supabase. En producción, RLS debe limitar lectura y escritura; nunca se debe exponer una clave <code>service_role</code> en el cliente.</li>
+</ul>
+<h3>Comandos y enlaces</h3>
+<ul>
+<li>Instalar: <code>npm install</code>. Ejecutar: <code>npm start</code>. Pruebas: <code>npm test</code>.</li>
+<li>Aplicación publicada: <a href="https://proyecto-del-curso.vercel.app/">https://proyecto-del-curso.vercel.app/</a></li>
+<li>Repositorio: <a href="https://github.com/BrunoLopezDC/proyecto-del-curso">github.com/BrunoLopezDC/proyecto-del-curso</a></li>
+</ul>
+<div class="callout"><b>Estado de publicación:</b> La aplicación está publicada en Vercel y la URL responde HTTP 200. La copia de trabajo (<code>static-v23</code>) se probó y se capturó en entorno local (<code>localhost:8080</code>). Al 26 de noviembre de 2026 el alias publicado aún sirve <code>static-v21</code>, por lo que no refleja los cambios de esta versión.</div>
+
+<h2>4. Pantallas y generación de vistas</h2>
+<ol>
+<li><b>Home / Momentos:</b> <code>public/index.html</code>. Feed combina registros locales y remotos; el indicador distingue conexión y modo local.</li>
+<li><b>Crear momento:</b> formulario del cliente con título y lugar. La tarjeta se presenta desde IndexedDB y se envía al backend con conectividad.</li>
+<li><b>Ayuda:</b> <code>public/help/index.html</code>, página estática cacheada con explicación del uso y modo offline.</li>
+<li><b>Fallback offline:</b> <code>public/offline.html</code>, respuesta cacheada cuando no se recupera una página HTML.</li>
+</ol>
+<p>Las vistas se producen en el cliente. Supabase actúa como API de datos y no como motor de renderizado de páginas.</p>
+<figure><img src="capturas/01-home.png" alt="Home y feed con indicador de conexión en línea"><figcaption>Figura 1. Home y feed con conexión en línea.</figcaption></figure>
+<figure><img src="capturas/02-crear.png" alt="Formulario para crear un momento"><figcaption>Figura 2. Formulario de creación de un momento.</figcaption></figure>
+<figure><img src="capturas/03-ayuda.png" alt="Página de ayuda"><figcaption>Figura 3. Página de ayuda de UTEQGram.</figcaption></figure>
+
+<h2>5. Reporte de pruebas</h2><p>Fecha de ejecución: 26 de noviembre de 2026, entorno local Linux con Node.js/npm y Chrome. Las pruebas y capturas corresponden al entorno local (<code>localhost:8080</code>).</p>
+<table><thead><tr><th>Prueba</th><th>Resultado</th><th>Evidencia</th></tr></thead><tbody>
+<tr><td>JSON del manifiesto e iconos</td><td>Aprobada</td><td>Manifiesto parseado; iconos de 192 y 512 px presentes.</td></tr>
+<tr><td>Recursos del shell precacheado</td><td>Aprobada</td><td>Todos los recursos locales de <code>STATIC_FILES</code> existen.</td></tr>
+<tr><td>Sintaxis de app, feed y service worker</td><td>Aprobada</td><td><code>node --check</code> sin errores.</td></tr>
+<tr><td>Persistencia offline sin Background Sync</td><td>Aprobada</td><td>Prueba verifica escrituras en <code>posts</code> y <code>sync-posts</code> y que Background Sync es opcional.</td></tr>
+<tr><td>Suite automatizada</td><td><b>4 aprobadas, 0 fallidas</b></td><td><code>npm test</code> con Node test runner.</td></tr>
+<tr><td>Renderizado y feed local</td><td>Aprobada</td><td>Comprobación de home, imagen local y publicaciones remotas en navegador.</td></tr>
+<tr><td>Flujo offline→online</td><td><b>Aprobada</b></td><td>Se creó una publicación con la red desactivada, se verificó el guardado local, se reconectó, se encontró en Supabase con HTTP 200 y se confirmó que la cola <code>sync-posts</code> quedó vacía. La fila de prueba se eliminó después.</td></tr>
+<tr><td>URL de Vercel</td><td>HTTP 200; versión publicada anterior</td><td>El alias publicado aún sirve <code>static-v21</code> y no refleja la copia local <code>static-v23</code>.</td></tr>
+</tbody></table>
+<figure><img src="capturas/04-offline.png" alt="Feed en modo offline cargado desde IndexedDB"><figcaption>Figura 4. Feed local disponible sin conexión.</figcaption></figure>
+<figure><img src="capturas/05-cache.png" alt="Chrome Application Cache Storage con static-v23 y dynamic-v23"><figcaption>Figura 5. Cache Storage muestra las cachés <code>static-v23</code> y <code>dynamic-v23</code>.</figcaption></figure>
+<figure><img src="capturas/06-indexeddb.png" alt="Chrome Application IndexedDB con la base post-store"><figcaption>Figura 6. IndexedDB muestra <code>post-store</code>, <code>posts</code> y <code>sync-posts</code>.</figcaption></figure>
+
+<h2>6. Limitaciones y siguientes pasos</h2>
+<ul>
+<li>Desplegar la versión <code>static-v23</code> en Vercel y verificar el alias de producción.</li>
+<li>Repetir la verificación de sincronización en otro navegador compatible con Background Sync para ampliar cobertura.</li>
+<li>Configurar y documentar políticas RLS; la clave anon no sustituye autorización.</li>
+<li>Para evolucionar el prototipo: añadir autenticación, edición, eliminación y carga de imágenes.</li>
+</ul>
+<p class="small">Versión editable del informe: docs/caso-estudio-pwa.md</p>
+</body>
+</html>
