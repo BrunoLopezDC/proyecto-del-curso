@@ -97,8 +97,3 @@ Fecha de ejecución: 2026-11-26, entorno local Linux con Node.js/npm y Chrome. L
 
 *Figura 6. IndexedDB muestra `post-store`, `posts` y `sync-posts`.*
 
-## 6. Limitaciones y siguientes pasos
-
-- Repetir la verificación de sincronización en otro navegador compatible con Background Sync para ampliar cobertura.
-- Configurar y documentar las políticas RLS de Supabase; una clave `anon` no reemplaza las reglas de autorización.
-- Añadir autenticación, edición/eliminación y selección/carga de imágenes si el caso evoluciona de demostración académica a servicio multiusuario.
